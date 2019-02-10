@@ -298,16 +298,144 @@ It uses another array method—findIndex. This method is somewhat like indexOf, 
 
 
 
+# Hoofdstuk 6 The Secret Life of Objects
 
+## Encapsulation
 
+Object-oriented programming betekend dat je bepaalde onderdelen in kleinere onderdelen verdeeld zodat ieder stukje zijn eigen ding kan doen.
+Zo kan bepaalde code lokaal worden opgeslagen zodat een ander persoon deze code niet per se hoeft te snappen. Alleen de code eromheen hoeft aangepast te worden.
+De verschillende onderdelen van een programma interacteren met elkaar via interfaces. 
 
+Properties that are part of the interface are called public. The others, which outside code should not be touching, are called private.
 
+It is also common to put an underscore (_) character at the start of property names to indicate that those properties are private.
 
+## Methods
 
+Methods are nothing more than properties that hold function values. This is a simple method:
 
+let rabbit = {};
+rabbit.speak = function(line) {
+  console.log(`The rabbit says '${line}'`);
+};
 
+rabbit.speak("I'm alive.");
+// → The rabbit says 'I'm alive.'
 
+## Prototypes
 
+console.log(Object.getPrototypeOf({}) ==
+            Object.prototype);
+// → true
+console.log(Object.getPrototypeOf(Object.prototype));
+// → null
+
+Functions derive from Function.prototype, and arrays derive from Array.prototype.
+
+console.log(Object.getPrototypeOf(Math.max) ==
+            Function.prototype);
+// → true
+console.log(Object.getPrototypeOf([]) ==
+            Array.prototype);
+// → true
+
+Met object.create kan je een speciefiek prototype maken voor een bepaald object. Zie de volgende code.
+
+let protoRabbit = {
+  speak(line) {
+    console.log(`The ${this.type} rabbit says '${line}'`);
+  }
+};
+let killerRabbit = Object.create(protoRabbit);
+killerRabbit.type = "killer";
+killerRabbit.speak("SKREEEE!");
+// → The killer rabbit says 'SKREEEE!'
+
+The “proto” rabbit acts as a container for the properties that are shared by all rabbits. An individual rabbit object, like the killer rabbit, contains properties that apply only to itself—in this case its type—and derives shared properties from its prototype.
+
+## Classes
+
+A class defines the shape of a type of object—what methods and properties it has. Such an object is called an instance of the class.
+
+If you put the keyword new in front of a function call, the function is treated as a constructor. This means that an object with the right prototype is automatically created, bound to this in the function, and returned at the end of the function.
+
+## Class notation
+
+So JavaScript classes are constructor functions with a prototype property. That is how they work, and until 2015, that was how you had to write them. These days, we have a less awkward notation.
+
+class Rabbit {
+  constructor(type) {
+    this.type = type;
+  }
+  speak(line) {
+    console.log(`The ${this.type} rabbit says '${line}'`);
+  }
+}
+
+let killerRabbit = new Rabbit("killer");
+let blackRabbit = new Rabbit("black");
+
+## Overriding derived properties
+
+Rabbit.prototype.teeth = "small";
+console.log(killerRabbit.teeth);
+// → small
+killerRabbit.teeth = "long, sharp, and bloody";
+console.log(killerRabbit.teeth);
+// → long, sharp, and bloody
+console.log(blackRabbit.teeth);
+// → small
+console.log(Rabbit.prototype.teeth);
+// → small
+
+## Maps
+
+let ages = {
+  Boris: 39,
+  Liang: 22,
+  Júlia: 62
+};
+
+console.log(`Júlia is ${ages["Júlia"]}`);
+// → Júlia is 62
+console.log("Is Jack's age known?", "Jack" in ages);
+// → Is Jack's age known? false
+console.log("Is toString's age known?", "toString" in ages);
+// → Is toString's age known? true
+
+Hier map je ages aan een naam.^
+
+As such, using plain objects as maps is dangerous. There are several possible ways to avoid this problem. First, it is possible to create objects with no prototype. If you pass null to Object.create, the resulting object will not derive from Object.prototype and can safely be used as a map.
+
+console.log("toString" in Object.create(null));
+// → false
+
+Nu kan je map gebruiken omdat er geen prototype meer in zit.
+
+Object property names must be strings. If you need a map whose keys can’t easily be converted to strings—such as objects—you cannot use an object as your map.
+Hiervoor kan je een class gebruiken genaamd Map. Het stored een mapping waardoor je elke type key kan gebruiken.
+
+De methodes .set en .get kan je gebruiken als je een Map class gebruikt. Zo kan je snel zoeken door een groot aantal values.
+
+## Polymorphism
+
+Rabbit.prototype.toString = function() {
+  return `a ${this.type} rabbit`;
+};
+
+console.log(String(blackRabbit));
+// → a black rabbit
+
+## Symbols
+
+let sym = Symbol("name");
+console.log(sym == Symbol("name"));
+// → false
+Rabbit.prototype[sym] = 55;
+console.log(blackRabbit[sym]);
+// → 55
+
+Symbols kunnen maar één keer gebruikt worden. Als je deze nog een keer gebruikt zie je dat er false komt te staan.
 
 
 
