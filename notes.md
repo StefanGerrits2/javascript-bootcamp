@@ -438,6 +438,117 @@ console.log(blackRabbit[sym]);
 Symbols kunnen maar één keer gebruikt worden. Als je deze nog een keer gebruikt zie je dat er false komt te staan.
 
 
+# Hoofdstuk 8 Bugs and Errors
+
+## Language
+
+Als je iets verkeerd codeert kan er NaN uitkomen of een undefined value. 
+De bron van deze problemen zijn soms moeilijk om te vinden.
+Het proces om fouten te vinden, wordt debugging genoemd.
+
+## Strict Mode
+
+Je kan Javascript stricer maken door strict mode aan te zetten. Dit kan je doen door "use strict" bovenaan de file te zetten, of bovenaan een function body.
+
+function canYouSpotTheProblem() {
+  "use strict";
+  for (counter = 0; counter < 10; counter++) {
+    console.log("Happy happy");
+  }
+}
+
+canYouSpotTheProblem();
+// → ReferenceError: counter is not defined
+
+Normally, when you forget to put let in front of your binding, as with counter in the example, JavaScript quietly creates a global binding and uses that. In strict mode, an error is reported instead. 
+
+Another change in strict mode is that the this binding holds the value undefined in functions that are not called as methods:
+
+function Person(name) { this.name = name; }
+let ferdinand = Person("Ferdinand"); // oops
+console.log(name);
+// → Ferdinand
+
+
+"use strict";
+function Person(name) { this.name = name; }
+let ferdinand = Person("Ferdinand"); // forgot new
+// → TypeError: Cannot set property 'name' of undefined
+
+Strict mode does a few more things. It disallows giving a function multiple parameters with the same name and removes certain problematic language features entirely (such as the with statement, which is so wrong it is not further discussed in this book).
+
+In short, putting "use strict" at the top of your program rarely hurts and might help you spot a problem.
+
+## Types
+
+Veel fouten kunnen ontstaan doordat je verward raakt welke soort values er in een functie gaan. Dit kan je ophelderen door een comment te plaatsen vóór de functie: 
+
+// (VillageState, Array) → {direction: string, memory: Array}
+function goalOrientedRobot(state, memory) {
+  // ...
+}
+
+## Testing
+
+Automated testing is the process of writing a program that tests another program.
+
+Writing tests is a bit more work than testing manually, but once you’ve done it, you gain a kind of superpower: it takes you only a few seconds to verify that your program still behaves properly in all the situations you wrote tests for. When you break something, you’ll immediately notice, rather than randomly running into it at some later time.
+
+Er wordt gebruik gemaakt van console.logs om zo iets te vertellen zoals FAILED.
+
+## Debugging
+
+Als je code iets geks oplevert en geen error geeft, ga dan vooral niet random je code veranderen tot het werkt. Denk eerst na en kom met een theorie waarom iets misschien niet werkt. Je kan console.logs toevoegen op regels code om meer informatie te krijgen wat er in het programma gebeurd. 
+
+## Exceptions
+
+function promptDirection(question) {
+  let result = prompt(question);
+  if (result.toLowerCase() == "left") return "L";
+  if (result.toLowerCase() == "right") return "R";
+  throw new Error("Invalid direction: " + result);
+}
+
+function look() {
+  if (promptDirection("Which way?") == "L") {
+    return "a house";
+  } else {
+    return "two angry bears";
+  }
+}
+
+try {
+  console.log("You see", look());
+} catch (error) {
+  console.log("Something went wrong: " + error);
+}
+
+Door try te gebruiken met catch kan je erachter komen of je code goed werkt. Als er in de try block iets vreemds gebeurd, dan wordt de catch blok uitgevoerd. Hier kan je dan een message intypen als er iets fout gaat.
+Als alles goed verloopt zal het programma verder lopen onder de try/catch statement.
+
+## Cleaning up after exceptions
+
+A finally block says “no matter what happens, run this code after trying to run the code in the try block.”
+
+```function transfer(from, amount) {
+  if (accounts[from] < amount) return;
+  let progress = 0;
+  try {
+    accounts[from] -= amount;
+    progress = 1;
+    accounts[getAccount()] += amount;
+    progress = 2;
+  } finally {
+    if (progress == 1) {
+      accounts[from] += amount;
+    }
+  }
+}```
+
+## Selective catching
+
+
+
 
 
 
