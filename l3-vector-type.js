@@ -23,7 +23,7 @@ minus(vec) {
   }
 	
 get length() {
-  return Math.sqrt(this.x + this.y);
+  return Math.sqrt(this.x * this.x + this.y * this.y); //returned length
   }
  
 }

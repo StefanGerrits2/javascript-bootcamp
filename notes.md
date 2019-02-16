@@ -82,6 +82,7 @@ Elke binding heeft een scope. Dit is de plek van het programma waar de binding z
 * .shift haalt de eerste element van een string weg
 * .unshift voegt een eerste element toe van een string
 
+```
 console.log([1, 2, 3, 2, 1].indexOf(2)); dit telt het aantal stappen waar 2 staat
 // → 1
 console.log([1, 2, 3, 2, 1].lastIndexOf(2)); dit telt het aantal stappen waar de laatste 2 staat
@@ -92,18 +93,21 @@ console.log([0, 1, 2, 3, 4].slice(2, 4));
 // → [2, 3]
 console.log([0, 1, 2, 3, 4].slice(2));
 // → [2, 3, 4]
+```
 
 slice pakt elementen binnen bepaalde indexen. de eerste index is inclusief, de laatste is exclusief
 wanneer er geen tweede index wordt gegeven, zal pakt slice alle elementen na de gegeven index
 
 met concat kan je twee arrays aan elkaar lijmen
 
+```
 function remove(array, index) {
   return array.slice(0, index)
     .concat(array.slice(index + 1));
 }
 console.log(remove(["a", "b", "c", "d", "e"], 2));
 // → ["a", "b", "d", "e"]
+```
 
 bij return wordt er a, b gereturned
 daarna wordt er array.slice(3) dus d, e eraan vastgeplakt -> dit wordt dus a, b, d, e
@@ -114,21 +118,28 @@ als je concat een value meegeeft wat geen array is, dan zal het toegevoegd worde
 
 a string’s indexOf can search for a string containing more than one character, whereas the corresponding array method looks only for a single element.
 
+```
 console.log("one two three".indexOf("ee"));
 // → 11
+```
 
 The trim method removes whitespace (spaces, newlines, tabs, and similar characters) from the start and end of a string.
 
+```
 console.log("  okay \n ".trim());
 // → okay
+```
 
 The zeroPad function from the previous chapter also exists as a method. It is called padStart and takes the desired length and padding character as arguments.
 
+```
 console.log(String(6).padStart(3, "0"));
 // → 006
+```
 
 met .split en .join kan je elementen uit een string uit elkaar halen. 
 
+```
 let sentence = "Secretarybirds specialize in stomping";
 let words = sentence.split(" ");
 console.log(words);
@@ -140,12 +151,14 @@ met .repeat kan je een string herhalen
 
 console.log("LA".repeat(3));
 // → LALALA
+```
 
 
 ## Rest parameters
 
 je kan Math.max gebruiken om het hoogste getal te vinden. het kan handig zijn om function(...numbers) te gebruiken zodat je een oneindig getal aan getallen mee kunt geven.
 
+```
 function max(...numbers) {
   let result = -Infinity;
   for (let number of numbers) {
@@ -155,21 +168,30 @@ function max(...numbers) {
 }
 console.log(max(4, 1, 9, -2));
 // → 9
+```
 
 You can use a similar three-dot notation to call a function with an array of arguments.
 
+```
 let numbers = [5, 1, 7];
 console.log(max(...numbers));
 // → 7
+```
 
-ook kan je getallen toevoegen in de console.log om het hoogste getal te krijgen: console.log(max(9, ...numbers, 2));
+ook kan je getallen toevoegen in de console.log om het hoogste getal te krijgen: 
+
+```
+console.log(max(9, ...numbers, 2));
+```
 
 ## The Math object
 
 random getal 1t/m 9:
 
+```
 console.log(Math.floor(Math.random() * 10));
 // → 2
+```
 
 There are also the functions 
 * Math.ceil (for “ceiling”, which rounds up to a whole number)
@@ -185,30 +207,35 @@ There are also the functions
 
 ## Abstracting repetition
 
+```
 let labels = [];
 repeat(5, i => {
   labels.push(`Unit ${i + 1}`);
 });
 console.log(labels);
 // → ["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"]
+```
 
 hier wordt een function value op de plek zelf gecreeërd.
 
 
 ## Higher-order functions
 
+```
 function greaterThan(n) {
   return m => m > n;
 }
 let greaterThan10 = greaterThan(10);
 console.log(greaterThan10(11));
 // → true
+```
 
 hier zie je dat een functie een andere functie maakt en dus overschrijdt.
 
 
 We can even write functions that provide new types of control flow.
 
+```
 function unless(test, then) {
   if (!test) then();
 }
@@ -220,15 +247,19 @@ repeat(3, n => {
 });
 // → 0 is even
 // → 2 is even
+```
 
 There is a built-in array method, forEach, that provides something like a for/of loop as a higher-order function.
 
+```
 ["A", "B"].forEach(l => console.log(l));
 // → A
 // → B
+```
 
 ## Filtering arrays
 
+```
 function filter(array, test) {
   let passed = [];
   for (let element of array) {
@@ -241,11 +272,13 @@ function filter(array, test) {
 
 console.log(filter(SCRIPTS, script => script.living));
 // → [{name: "Adlam", …}, …]
+```
 
 hier worden elementen uit een array gefiltert waarbij de test niet wordt doorgevoerd.
 
 ## Transforming with map
 
+```
 function map(array, transform) {
   let mapped = [];
   for (let element of array) {
@@ -257,9 +290,11 @@ function map(array, transform) {
 let rtlScripts = SCRIPTS.filter(s => s.direction == "rtl");
 console.log(map(rtlScripts, s => s.name));
 // → ["Adlam", "Arabic", "Imperial Aramaic", …]
+```
 
 ## Summarizing with reduce
 
+```
 function reduce(array, combine, start) {
   let current = start;
   for (let element of array) {
@@ -270,16 +305,20 @@ function reduce(array, combine, start) {
 
 console.log(reduce([1, 2, 3, 4], (a, b) => a + b, 0));
 // → 10
+```
 
 elk element uit de array wordt hier gepakt om deze vervolgens in element te zetten. current zal op 0 beginnen, maar wordt steeds groter omdat de elementen van de array er steeds bij opgeteld worden door combine. eerst staat er dus (0,1) hierna komt er (1,2) te staan, hierna (3,3) en als laatst (6,4) hier komt dus 10 uit.
 
 als de array minimaal één element heeft, hoef je geen start argument te geven. Het pakt gewoon het eerste element en begint bij de tweede te reducen:
 
+```
 console.log([1, 2, 3, 4].reduce((a, b) => a + b));
 // → 10
+```
 
 ## Composability
 
+```
 let total = 0, count = 0;
 for (let script of SCRIPTS) {
   if (script.living) {
@@ -289,6 +328,7 @@ for (let script of SCRIPTS) {
 }
 console.log(Math.round(total / count));
 // → 1188
+```
 
 ## Recognizing text
 
@@ -314,6 +354,7 @@ It is also common to put an underscore (_) character at the start of property na
 
 Methods are nothing more than properties that hold function values. This is a simple method:
 
+```
 let rabbit = {};
 rabbit.speak = function(line) {
   console.log(`The rabbit says '${line}'`);
@@ -321,9 +362,11 @@ rabbit.speak = function(line) {
 
 rabbit.speak("I'm alive.");
 // → The rabbit says 'I'm alive.'
+```
 
 ## Prototypes
 
+```
 console.log(Object.getPrototypeOf({}) ==
             Object.prototype);
 // → true
@@ -338,9 +381,11 @@ console.log(Object.getPrototypeOf(Math.max) ==
 console.log(Object.getPrototypeOf([]) ==
             Array.prototype);
 // → true
+```
 
 Met object.create kan je een speciefiek prototype maken voor een bepaald object. Zie de volgende code.
 
+```
 let protoRabbit = {
   speak(line) {
     console.log(`The ${this.type} rabbit says '${line}'`);
@@ -350,6 +395,7 @@ let killerRabbit = Object.create(protoRabbit);
 killerRabbit.type = "killer";
 killerRabbit.speak("SKREEEE!");
 // → The killer rabbit says 'SKREEEE!'
+```
 
 The “proto” rabbit acts as a container for the properties that are shared by all rabbits. An individual rabbit object, like the killer rabbit, contains properties that apply only to itself—in this case its type—and derives shared properties from its prototype.
 
@@ -363,6 +409,7 @@ If you put the keyword new in front of a function call, the function is treated 
 
 So JavaScript classes are constructor functions with a prototype property. That is how they work, and until 2015, that was how you had to write them. These days, we have a less awkward notation.
 
+```
 class Rabbit {
   constructor(type) {
     this.type = type;
@@ -374,9 +421,11 @@ class Rabbit {
 
 let killerRabbit = new Rabbit("killer");
 let blackRabbit = new Rabbit("black");
+```
 
 ## Overriding derived properties
 
+```
 Rabbit.prototype.teeth = "small";
 console.log(killerRabbit.teeth);
 // → small
@@ -387,9 +436,11 @@ console.log(blackRabbit.teeth);
 // → small
 console.log(Rabbit.prototype.teeth);
 // → small
+```
 
 ## Maps
 
+```
 let ages = {
   Boris: 39,
   Liang: 22,
@@ -402,13 +453,16 @@ console.log("Is Jack's age known?", "Jack" in ages);
 // → Is Jack's age known? false
 console.log("Is toString's age known?", "toString" in ages);
 // → Is toString's age known? true
+```
 
 Hier map je ages aan een naam.^
 
 As such, using plain objects as maps is dangerous. There are several possible ways to avoid this problem. First, it is possible to create objects with no prototype. If you pass null to Object.create, the resulting object will not derive from Object.prototype and can safely be used as a map.
 
+```
 console.log("toString" in Object.create(null));
 // → false
+```
 
 Nu kan je map gebruiken omdat er geen prototype meer in zit.
 
@@ -417,23 +471,28 @@ Hiervoor kan je een class gebruiken genaamd Map. Het stored een mapping waardoor
 
 De methodes .set en .get kan je gebruiken als je een Map class gebruikt. Zo kan je snel zoeken door een groot aantal values.
 
+
 ## Polymorphism
 
+```
 Rabbit.prototype.toString = function() {
   return `a ${this.type} rabbit`;
 };
 
 console.log(String(blackRabbit));
 // → a black rabbit
+```
 
 ## Symbols
 
+```
 let sym = Symbol("name");
 console.log(sym == Symbol("name"));
 // → false
 Rabbit.prototype[sym] = 55;
 console.log(blackRabbit[sym]);
 // → 55
+```
 
 Symbols kunnen maar één keer gebruikt worden. Als je deze nog een keer gebruikt zie je dat er false komt te staan.
 
@@ -446,10 +505,12 @@ Als je iets verkeerd codeert kan er NaN uitkomen of een undefined value.
 De bron van deze problemen zijn soms moeilijk om te vinden.
 Het proces om fouten te vinden, wordt debugging genoemd.
 
+
 ## Strict Mode
 
 Je kan Javascript stricer maken door strict mode aan te zetten. Dit kan je doen door "use strict" bovenaan de file te zetten, of bovenaan een function body.
 
+```
 function canYouSpotTheProblem() {
   "use strict";
   for (counter = 0; counter < 10; counter++) {
@@ -459,11 +520,13 @@ function canYouSpotTheProblem() {
 
 canYouSpotTheProblem();
 // → ReferenceError: counter is not defined
+```
 
 Normally, when you forget to put let in front of your binding, as with counter in the example, JavaScript quietly creates a global binding and uses that. In strict mode, an error is reported instead. 
 
 Another change in strict mode is that the this binding holds the value undefined in functions that are not called as methods:
 
+```
 function Person(name) { this.name = name; }
 let ferdinand = Person("Ferdinand"); // oops
 console.log(name);
@@ -474,19 +537,23 @@ console.log(name);
 function Person(name) { this.name = name; }
 let ferdinand = Person("Ferdinand"); // forgot new
 // → TypeError: Cannot set property 'name' of undefined
+```
 
 Strict mode does a few more things. It disallows giving a function multiple parameters with the same name and removes certain problematic language features entirely (such as the with statement, which is so wrong it is not further discussed in this book).
 
 In short, putting "use strict" at the top of your program rarely hurts and might help you spot a problem.
 
+
 ## Types
 
 Veel fouten kunnen ontstaan doordat je verward raakt welke soort values er in een functie gaan. Dit kan je ophelderen door een comment te plaatsen vóór de functie: 
 
+```
 // (VillageState, Array) → {direction: string, memory: Array}
 function goalOrientedRobot(state, memory) {
   // ...
 }
+```
 
 ## Testing
 
@@ -496,12 +563,15 @@ Writing tests is a bit more work than testing manually, but once you’ve done i
 
 Er wordt gebruik gemaakt van console.logs om zo iets te vertellen zoals FAILED.
 
+
 ## Debugging
 
 Als je code iets geks oplevert en geen error geeft, ga dan vooral niet random je code veranderen tot het werkt. Denk eerst na en kom met een theorie waarom iets misschien niet werkt. Je kan console.logs toevoegen op regels code om meer informatie te krijgen wat er in het programma gebeurd. 
 
+
 ## Exceptions
 
+```
 function promptDirection(question) {
   let result = prompt(question);
   if (result.toLowerCase() == "left") return "L";
@@ -522,15 +592,18 @@ try {
 } catch (error) {
   console.log("Something went wrong: " + error);
 }
+```
 
 Door try te gebruiken met catch kan je erachter komen of je code goed werkt. Als er in de try block iets vreemds gebeurd, dan wordt de catch blok uitgevoerd. Hier kan je dan een message intypen als er iets fout gaat.
 Als alles goed verloopt zal het programma verder lopen onder de try/catch statement.
+
 
 ## Cleaning up after exceptions
 
 A finally block says “no matter what happens, run this code after trying to run the code in the try block.”
 
-```function transfer(from, amount) {
+```
+function transfer(from, amount) {
   if (accounts[from] < amount) return;
   let progress = 0;
   try {
@@ -543,27 +616,113 @@ A finally block says “no matter what happens, run this code after trying to ru
       accounts[from] += amount;
     }
   }
-}```
+}
+```
 
 ## Selective catching
 
 
+# Hoofdstuk 10 Modules
+
+## Modules
+
+A module is a piece of program that specifies which other pieces it relies on and which functionality it provides for other modules to use (its interface).
+By restricting the ways in which modules interact with each other, the system becomes more like LEGO, where pieces interact through well-defined connectors, and less like mud, where everything mixes with everything.
+
+The relations between modules are called dependencies.
 
 
+## Packages
+
+One of the advantages of building a program out of separate pieces, and being actually able to run those pieces on their own, is that you might be able to apply the same piece in different programs.
+
+Packages zijn stukken code die je online kan importeren die vaak door anderen zijn geschreven
+Modules zijn stukken code die lokaal op je computer zijn die je kan inladen die vaak door jezelf zijn geschreven
+
+Packages bevatten vaak een documentatie wat het precies doet.
+Een plek op je packages te zetten is NPM. Hier kan je packages opzetten, downloaden en updaten.
+
+NPM:
+* Een service waar je kan packages kan uploaden en downloaden, en een programma die je helpt je ze te installeren en te gebruiken.
+
+Packages zijn erg handig. Hierdoor hoef je dezelfde code niet 100 keer te schrijven, maar kan je deze gewoon importeren.
 
 
+## Improvised modules
+
+Een module systeem kan gemaakt worden door Javascript functions local scopes te maken met objecten:
+
+```
+const weekDay = function() {
+  const names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+                 "Thursday", "Friday", "Saturday"];
+  return {
+    name(number) { return names[number]; },
+    number(name) { return names.indexOf(name); }
+  };
+}();
+
+console.log(weekDay.name(weekDay.number("Sunday")));
+// → Sunday
+```
+Dit zorgt voor isolatie.
 
 
+## Evaluating data as code
+
+There are several ways to take data (a string of code) and run it as part of the current program.
+
+The most obvious way is the special operator eval, which will execute a string in the current scope. This is usually a bad idea because it breaks some of the properties that scopes normally have, such as it being easily predictable which binding a given name refers to.
+
+Helaas is de scope hierdoor niet gesloten
+
+```
+const x = 1;
+function evalAndReturnX(code) {
+  eval(code);
+  return x;
+}
+
+console.log(evalAndReturnX("var x = 2"));
+// → 2
+console.log(x);
+// → 1
+```
+
+Een betere manier om dit te doen is door de Function constructor te gebruiken. Dit neemt 2 agrumenten. Het wrapped de code in de function value zodat het een eigen scope krijgt.
+
+This is precisely what we need for a module system. We can wrap the module’s code in a function and use that function’s scope as module scope.
 
 
+## CommonJS
+
+The most widely used approach to bolted-on JavaScript modules is called CommonJS modules. Node.js uses it and is the system used by most packages on NPM.
+
+Door *require* te gebruiken wordt de module geladen en returnes the interface.
+
+This example module provides a date-formatting function. It uses two packages from NPM—ordinal to convert numbers to strings like "1st" and "2nd", and date-names to get the English names for weekdays and months. It exports a single function, formatDate, which takes a Date object and a template string.
+
+The template string may contain codes that direct the format, such as YYYY for the full year and Do for the ordinal day of the month. You could give it a string like "MMMM Do YYYY" to get output like “November 22nd 2017”.
+
+```
+const ordinal = require("ordinal");
+const {days, months} = require("date-names");
+
+exports.formatDate = function(date, format) {
+  return format.replace(/YYYY|M(MMM)?|Do?|dddd/g, tag => {
+    if (tag == "YYYY") return date.getFullYear();
+    if (tag == "M") return date.getMonth();
+    if (tag == "MMMM") return months[date.getMonth()];
+    if (tag == "D") return date.getDate();
+    if (tag == "Do") return ordinal(date.getDate());
+    if (tag == "dddd") return days[date.getDay()];
+  });
+};
+```
+
+De interface *ordinal* is een single function.
 
 
-
-
-
-
-
-
-
+## ECMAScript modules
 
 
