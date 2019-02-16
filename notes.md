@@ -350,6 +350,7 @@ Properties that are part of the interface are called public. The others, which o
 
 It is also common to put an underscore (_) character at the start of property names to indicate that those properties are private.
 
+
 ## Methods
 
 Methods are nothing more than properties that hold function values. This is a simple method:
@@ -399,11 +400,13 @@ killerRabbit.speak("SKREEEE!");
 
 The “proto” rabbit acts as a container for the properties that are shared by all rabbits. An individual rabbit object, like the killer rabbit, contains properties that apply only to itself—in this case its type—and derives shared properties from its prototype.
 
+
 ## Classes
 
 A class defines the shape of a type of object—what methods and properties it has. Such an object is called an instance of the class.
 
 If you put the keyword new in front of a function call, the function is treated as a constructor. This means that an object with the right prototype is automatically created, bound to this in the function, and returned at the end of the function.
+
 
 ## Class notation
 
@@ -724,5 +727,7 @@ De interface *ordinal* is een single function.
 
 
 ## ECMAScript modules
+
+
 
 
