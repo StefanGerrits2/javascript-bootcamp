@@ -729,5 +729,446 @@ De interface *ordinal* is een single function.
 ## ECMAScript modules
 
 
+# Hoofdstuk 13 Javascript And The Browser
+
+## Networks and the internet 
+
+Computer networks bestaan al sinds 1950. Als je maar 2 draden tussen twee of meerdere computers legt, kan je al veel doen.
+
+De magie om meerdere computers over de planeet te connecten is begonnen in 1980, dit noemen wij het Internet.
+
+Computers sturen bits naar elkaar, dit heet *bit-shooting*
+
+Een *netwerk protocol* beschrijft een bepaalde stijl van communicatie over een network. Zoals:
+
+* Mail versturen
+* Mail ophalen
+* Bestanden delen
+* Computers beheren die geinfecteerd zijn door bepaalde software
+
+### HTTP Hypertext Transfer Protocol
+
+HTTP is een protocol om chunks met informatie op te halen. Zoals:
+
+* Web pages
+* Pictures
+
+De kant die de request maakt begint met een line zoals dit:
+
+```
+GET /index.html HTTP/1.1
+```
+
+Het benoemd de resource en de versie van het protocol die wordt gebruikt.
+
+Er zijn nog meer regels zodat de requester meer informatie kan geven, en andersom.
+
+De meeste protocollen worden gemaakt boven andere protocollen.  *HTTP treats the network as a streamlike device into which you can put bits and have them arrive at the correct destination in the correct order. As we saw in Chapter 11, ensuring those things is already a rather difficult problem.*
+
+### TCP Transmission Control Protocol
+
+De TCP Protocol is een protocol die dit probleem oplost. Alle internet connected devices spreken het. Daarnaast is de meeste communicatie van het internet daarop gebouwd (TCP)
+
+Een TCP connectie werkt zo: Een computer is aan het wachten, oftewel luisteren totdat een andere computer begint met praten. Om naar verschillende soorten communicatie te luisteren op dezelfde tijd, heeft iedere luisteraar een nummer, dit wordt een *port* genoemd. 
+
+De meeste protocollen specificeren welke *port* standaard moet worden gebruikt. Als voorbeeld: wanneer we een email willen versturen via het SMTP protocol, dan wordt de machine waarnaar we het versturen verwacht om naar *port 25* te luisteren.
+
+Een andere computer kan dan een connectie tot stand brengen met de target machine door de juiste *port* te gebruiken. Als de target machine is bereikt met het juiste *port*, dan is er succesvol een connectie gemaakt. De computer die de connectie maakt wordt de *client* genoemd.
+
+Zo'n connectie kan je zien als een pijp waarbij aan beide kanten bits kunnen gaan. Van de ene kant naar de andere, en andersom. Wanneer de bits succesvol de overkant hebben bereikt, kunnen deze worden uitgelezen aan de andere kant.
+
+
+## The Web
+
+The *World Wide Web* is een set met protocollen en formats die ons toegang geven om web paginas in een browser te bezoeken. Het *Web* gedeelte staat voor het feit dat meerdere pages met elkaar in contact staan. 
+
+Om bij het Web te horen, moet je een machine connecten naar het internet die naar *port 80* luistert met het HTTP protocol zodat de computers naar documenten kan vragen.
+
+Elk document op het Web is genoemd naar een URL Uniform Resource Locator, dit ziet er zo uit:
+
+``` 
+http://eloquentjavascript.net/13_browser.html
+
+```
+* http:// = protocol
+* eloquentjavascript.net = server
+* /13_browser.html = path
+
+Het eerste stuk vertelt on dat deze URL het HTTP protocol gebruikt. Het tweede indentificeert welke server wij het document van opvragen. Het laatste is de path string die ons leidt naar een specifiek onderdeel van dat document.
+
+Machines die connecten met het Internet krijgen een IP adres. Dit is een nummer die wordt gebruikt zodat je berichten kan sturen naar die machine. Het ziet er uit als dit: 149.210.142.219 of 2001:4860:4860::8888. 
+
+Omdat deze lange getallen moeilijk zijn om te typen, kan je een *domain name* registreren voor een specifiek adress of meerdere adressen. Je gebruikt dus een domein naam om naar het IP adres van de machine te gaan. 
+
+Als je deze URL in je browsers adress bar tikt, zal de browser proberen om het document van die URL te laten zien.
+
+1. Eerst moet je browser zoeken welk IP adres eloquentjavascript.net bevat
+2. Daarna zal het connectie maken met de server via het HTTP protocol en zal het vragen naar de resource /13_browser.html
+3. Als alles goed is gegaan zal de server het document terugsturen en op je scherm laten zien.
+
+## HTML Hypertext Markup Language
+
+HTML is een document format om web pages te maken. Een HTML document bevat tekst, maar ook *tags* die structuur geven aan de tekst, zoals links, paragrafen en headings.
+
+Een kort HTML document voorbeeld:
+
+```
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My home page</title>
+  </head>
+  <body>
+    <h1>My home page</h1>
+    <p>Hello, I am Marijn and this is my home page.</p>
+    <p>I also wrote a book! Read it
+      <a href="http://eloquentjavascript.net">here</a>.</p>
+  </body>
+</html>
+```
+
+De tags die tussen angle bracket staan: *<* en *>*, geven informatie over de structuur van het document
+
+Het document begint met
+```
+<!doctype html>
+```
+Dit vertelt de browser dat het de pagina moetinladen als moderne HTML.
+
+Een HTML document heeft een head en een body. De *head* bevat informatie over het document. De *body* bevat het document zelf. 
+
+Sommige opening tags zoals < a > kan informatie bevatten zoals 
+```
+<a name="value">
+```
+Deze worden attributen genoemd. href staat voor hypertext reference.
+
+Sommige tags sluiten niks, zoals:
+```
+<meta charset="utf-8">
+```
+
+Om angle brackets in een HTML document te gebruiken kan je het volgende doen:
+* Een opening angle bracket wordt geschreven als &lt; (less than)
+* Een sluiting angle bracket wordt geschreven als &gt; (greater than)
+
+In HTML, een & teken gevolgd bij een naam of character code en een ; heet een *entity* en zal worden vervangen door het character dat het voorstelt.
+
+Als bepaalde tags missen in een HTML document, kan de browser dit gemakkelijk herstellen. Als er bijvoorbeeld geen head of body staat bijvoorbeeld. De browser weet dat meta and title in de head horen en dat h1 betekent dat de body is gestart. 
+
+## HTML and Javascript
+
+Een script wordt gelezen in een HTML pagina wanneer er een script tag staat. Je kan beter aan het einde van de body een script als bestand linken.
+
+Een script tag moet altijd weer gesloten worden. Zelfs als er geen code in de file zit. Als je deze vergeet te sluiten, zal de rest van de pagina als javascript worden gelezen.
+
+Je kan ES modules laden in de browser door in je script een tag mee te geven met een
+```
+type="module"
+```
+
+attribuut. Modules kunnen afhankelijk zijn van andere modules door relatieve URLs als module names in import declaraties.
+
+Sommige attributen kunnen ook een javascript programma bevatten. De button tag hieronder bevat een onclick attribuut. De value van het attribuut zal worden gestart wanneer er op de button wordt geklikt:
+
+```
+<button onclick="alert('Boom!');">DO NOT PRESS</button>
+```
+
+## In the sandbox
+
+Een programma zijn envoirement isoleren noem je *sandboxing*. Het idee dat het programma gevaarloos in een sandbox speelt. Het programma kan er niet uit. 
+
+Het lastige gedeelte van sandboxing is dat je het programma genoeg ruimte moet geven om zijn werk te laten doen, maar ook een limiet stellen dat het geen gevaarlijke dingen kan doen.
+
+## Compatibility and browser wars
+
+In de eerste stages van het Web was de Browser Mosaic aan het domineren. Na een paar jaar werd Netscape de grootste, die gerunned werd door Microsoft's Internet Explorer. 
+
+De *browser wars* bestond uit 2 of 3 incompitable platforms. Deze zaten zelfs vol met bugs in 2003. Het was lastig voor mensen om web paginas te schrijven.
+
+Mozilla Firefox challenged Internet Explorers positie in de late 2000s. Omdat Microsoft niet al te geintereseerd was, nam Firefox een groot deel van de markt in handen. Ook kwam Google met Google chrome en Apple met Safari. Er waren dus 4 grote browsers in plaats van 1.
+
+Doordat deze nieuwkomers wel geinteresseerd waren, zaten er minder bugs in met betere standaarden.
+
+
+# Hoofdstuk 14 The Document Object Model
+
+## Document structure
+
+In elke box van een HTML document zit een object, hiermee kan je interacteren. Dit vertelt in welke boxen tekst bevat. Dit heet het Document Object Model, oftewel DOM.
+
+De globale binding *document* geeft ons toegang tot deze objecten. Het *documentElement* property is het object van de HTML tag.
+
+## Trees
+
+We noemen een *data structure* een *tree*, dit heeft een bepaalde strructuur  met 1 *root*, in dit geval de DOM, document.documentElement.
+
+Een *tree* heeft verschillende soorten *nodes*. De syntax tree voor *the Egg language* heeft identifiers, values en application nodes. Deze application nodes kunnen children bevatten, terwijl identifiers en values leaves zijn, of nodes zonder children.
+
+Hetzelfde geld voor de DOM. Nodes voor elements, die HTML tags reppresenteren, dit is de structuur van het document. Deze kunnen child notes bevatten.
+
+Als voorbeeld van zo'n node is *document.body*. Sommige van deze children kunnen leaf nodes zijn, delen van een tekst of comment nodes.
+
+Elke DOM node object heeft een *nodeType* property, die een nummer bevat die een *type of node* identificeert. Elementen hebben code 1, wat ook wordt gedefinieerd als de constante property *Node.ELEMENT_NODE*.
+
+Text nodes representeren een stuk tekst in het document, code 3, *Node.TEXT_NODE*. Comments hebben code 8, *Node.COMMENT_NODE*.
+
+Een andere manier om onze document tree te visualiseren gaat zo:
+
+![](http://i67.tinypic.com/21btc2a.png)
+
+De leaves zijn text nodes. De pijlen zijn parent-child relationships tussen nodes.
+
+## The standard
+
+De DOM was niet alleen gedesigned voor alleen Javascript. Het is juist een neutrale interface die door andere systemen kunnen worden gebruikt.
+
+Er is geen manier om een neieuwe node te maken en dit children en attributes te geven. Je moet het eerst maken om vervolgens de children en de attributes een voor een toe te voegen door side effects te gebruiken. Code dat extreem interacteert met de DOM neigt ernaar om lang, herhalend en lelijk te zijn.
+
+## Moving through the tree
+
+DOM nodes bevatten links naar andere nodes die dichtbij zijn. Dit diagram illustreert dat:
+
+![](http://i64.tinypic.com/2uizwja.png)
+
+Ook is er een *children* property, net als *childNotes* maar dit bevat alleen children elementen (type1), geen andere types van child notes. Dit kan handig zijn wanneer je niet geinteresseerd ben in text nodes.
+
+Wanneer je te maken heb met zo'n nested data structure, zijn recursive functions vaak handig. De volgende functie scant een document voor text nodes en bevat een string die true terug returned als hij er een heeft gevonden:
+
+```
+function talksAbout(node, string) {
+  if (node.nodeType == Node.ELEMENT_NODE) {
+    for (let i = 0; i < node.childNodes.length; i++) {
+      if (talksAbout(node.childNodes[i], string)) {
+        return true;
+      }
+    }
+    return false;
+  } else if (node.nodeType == Node.TEXT_NODE) {
+    return node.nodeValue.indexOf(string) > -1;
+  }
+}
+
+console.log(talksAbout(document.body, "book"));
+// → true
+```
+The nodeValue property of a text node holds the string of text that it represents.
+
+## Finding elements
+
+Om een bepaalde link te krijgen, kan je dit het best zo doen:
+
+```
+let link = document.body.getElementsByTagName("a")[0];
+console.log(link.href);
+```
+
+Alle element nodes hebben een *getElementsByTagName* method. Die collect alle elementen met die tag name that are descendants (direct or indirect children) of that node and returns een array-like object.
+
+Om een specifieke single node te vinden, kan je het een id attribuut geven en vervolgens *document.getElementById* gebruiken:
+
+```
+<p>My ostrich Gertrude:</p>
+<p><img id="gertrude" src="img/ostrich.png"></p>
+
+<script>
+  let ostrich = document.getElementById("gertrude");
+  console.log(ostrich.src);
+</script>
+```
+
+Ook kan je de methode *getElementsByClassName* gebruiken die zoekt door alle content van een element node, and retrieves alle elementen die de bepaalde string bevatten in hun class attribuut.
+
+## Changing the document
+
+Bijna alles in de DOM data structure kan veranderd worden. De shape van de document tree kan modified worden door de parent-child relationships te veranderen. Nodes hebben een *remove* method om ze te verwijderen van hun current parent node. Om een child node aan een element node toe te voegen kunnen we *appendChild* gebruiken, dit plaatst het aan het einde van de lijst met children. Of *insertBefore*, dit plaatst de node als eerste argument vóór de node die gegeven wordt als tweede argument.
+
+Beide *replaceChild* en *insertBefore* verwachten dat de *nieuwe* node als eerste argument wordt meegegeven.
+
+A node can exist in the document in only one place. Thus, inserting paragraph Three in front of paragraph One will first remove it from the end of the document and then insert it at the front, resulting in Three/One/Two. All operations that insert a node somewhere will, as a side effect, cause it to be removed from its current position (if it has one).
+
+The replaceChild method is used to replace a child node with another one. It takes as arguments two nodes: a new node and the node to be replaced. The replaced node must be a child of the element the method is called on. Note that both *replaceChild* and *insertBefore* expect the new node as their first argument.
+
+## Creating nodes
+
+Als je alle img tags wil verplaatsen met hun *alt* attributen, dan kan je dit doen door de images weg te halen en text nodes aan te maken met *document.createTextNode*.
+
+```
+<p>The <img src="img/cat.png" alt="Cat"> in the
+  <img src="img/hat.png" alt="Hat">.</p>
+
+<p><button onclick="replaceImages()">Replace</button></p>
+
+<script>
+  function replaceImages() {
+    let images = document.body.getElementsByTagName("img");
+    for (let i = images.length - 1; i >= 0; i--) {
+      let image = images[i];
+      if (image.alt) {
+        let text = document.createTextNode(image.alt);
+        image.parentNode.replaceChild(text, image);
+      }
+    }
+  }
+</script>
+```
+*createTextNode* geeft on een text nodie die we in kunnen voegen in het document om het zichtbaar te maken op het scherm.
+
+Als je een solid connection of nodes wil, dan kan je de collection converten to a real array calling *Array.from*:
+
+```
+let arrayish = {0: "one", 1: "two", length: 2};
+let array = Array.from(arrayish);
+console.log(array.map(s => s.toUpperCase()));
+// → ["ONE", "TWO"]
+```
+
+Om element nodes te maken, kan je *document.createElement* gebruiken, dit zal een tag name bevatten en geeft een empty node terug van het gegeven type.
+
+## Attributes
+
+HTML geeft jou toestemming om wat voor attribuut dan ook op een node te zetten. Zo kan je extra informatie storen in een document. Hiervoor gebruik je *getAttribute* en *setAttribute*:
+
+```
+<p data-classified="secret">The launch code is 00000000.</p>
+<p data-classified="unclassified">I have two feet.</p>
+
+<script>
+  let paras = document.body.getElementsByTagName("p");
+  for (let para of Array.from(paras)) {
+    if (para.getAttribute("data-classified") == "secret") {
+      para.remove();
+    }
+  }
+</script>
+```
+Het is aangeraden om de namen *data-* te geven zodat ze niet conflicten met andere attributen.
+
+## Layout
+
+Paragraphs of headings die de hele breedte van een document in beslag nemen en worden gerenderd op verschillende regels, worden *block elements* genoemd. Andere elementen zoals a of strong worden gerenderd in dezelfde line met tekst eromheen, deze heten *inline elements*.
+
+De size en position van een element kan accesed worden van Javascript. DE *offsetWidth* en *offsetHeight* properties geeft de ruimte dat het element in beslag neemt in *pixels*. 
+
+Similarly, clientWidth and clientHeight give you the size of the space inside the element, ignoring border width.
+
+```
+<p style="border: 3px solid red">
+  I'm boxed in
+</p>
+
+<script>
+  let para = document.body.getElementsByTagName("p")[0];
+  console.log("clientHeight:", para.clientHeight);
+  console.log("offsetHeight:", para.offsetHeight);
+</script>
+```
+De meest effectieve manier om de exacte positie van een element op het scherm te vinden doe je via de *getBoundingClientRect* methode. Dit returned een object met de *top, bottom, left and right* properties in pixels relatief van linksboven op je scherm. Als je dit relatief op het hele document wil, moet je de huidige scroll positie toevoegen die je kan vinden in de bindings van *pageXOffset* en *pageYOffset*.
+
+## Styling
+
+Hier is een voorbeeld dat een *style* property gebruikt:
+
+```
+<p><a href=".">Normal link</a></p>
+<p><a href="." style="color: green">Green link</a></p>
+```
+Een style attribuut kan een of meerdere declaraties bevatten, die properties zijn (zoals kleur) gevolgd met een colon (:) en een value (zoals groen). Als er meerdere declaraties zijn moet er een semicolon (;) tussen. Zoals:
+
+```
+"color: red; border: none"
+```
+Dit kan je ook doen met de propertie *display* met de values *block* en *none*.
+
+De code van Javascript kan direct de style van een element manipuleren door de element zijn *style* property:
+
+```
+<p id="para" style="color: purple">
+  Nice text
+</p>
+
+<script>
+  let para = document.getElementById("para");
+  console.log(para.style.color);
+  para.style.color = "magenta";
+</script>
+```
+Style properties als *font-family* hebben een streepje wat het awkward maakt om dat te typen in Javascript. Hier is een oplossing voor. Namelijk dit: *style.fontFamily*.
+
+## Cascading styles
+
+```
+.subtle {
+  color: gray;
+  font-size: 80%;
+}
+#header {
+  background: blue;
+  color: white;
+}
+/* p elements with id main and with classes a and b */
+p#main.a.b {
+  margin-bottom: 20px;
+}
+```
+
+The notation p > a {…} applies the given styles to all <a> tags that are direct children of <p> tags. Similarly, p a {…} applies to all <a> tags inside <p> tags, whether they are direct or indirect children.
+
+## Query selectors
+
+The querySelectorAll method, which is defined both on the document object and on element nodes, takes a selector string and returns a NodeList containing all the elements that it matches.
+
+```
+<p>And if you go chasing
+  <span class="animal">rabbits</span></p>
+<p>And you know you're going to fall</p>
+<p>Tell 'em a <span class="character">hookah smoking
+  <span class="animal">caterpillar</span></span></p>
+<p>Has given you the call</p>
+
+<script>
+  function count(selector) {
+    return document.querySelectorAll(selector).length;
+  }
+  console.log(count("p"));           // All <p> elements
+  // → 4
+  console.log(count(".animal"));     // Class animal
+  // → 2
+  console.log(count("p .animal"));   // Animal inside of <p>
+  // → 2
+  console.log(count("p > .animal")); // Direct child of <p>
+  // → 1
+</script>
+```
+## Positioning and animating
+
+The following document displays a picture of a cat that moves around in an ellipse:
+
+```
+<p style="text-align: center">
+  <img src="img/cat.png" style="position: relative">
+</p>
+<script>
+  let cat = document.querySelector("img");
+  let angle = Math.PI / 2;
+  function animate(time, lastTime) {
+    if (lastTime != null) {
+      angle += (time - lastTime) * 0.001;
+    }
+    cat.style.top = (Math.sin(angle) * 20) + "px";
+    cat.style.left = (Math.cos(angle) * 200) + "px";
+    requestAnimationFrame(newTime => animate(newTime, time));
+  }
+  requestAnimationFrame(animate);
+</script>
+```
+De afbeelding is gecentered op de pagina met een relatieve positie. De *top* en *left* styles worden continu veranderd om een animatie te maken.
+
+Het script gebruikt een *requestAnimationFrame* om de *animate* funciton te runnen wanneer de browser klaar is om het scherm te veranderen. Dan called hij zichzelf weer om de volgende update te genereren. Als de browser window actief is, zal dit 60 keer per seconden updaten, dit is een prima animatie met 60FPS.
+
+
+
 
 
