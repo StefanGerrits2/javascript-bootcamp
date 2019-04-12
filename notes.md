@@ -1168,6 +1168,282 @@ De afbeelding is gecentered op de pagina met een relatieve positie. De *top* en 
 
 Het script gebruikt een *requestAnimationFrame* om de *animate* funciton te runnen wanneer de browser klaar is om het scherm te veranderen. Dan called hij zichzelf weer om de volgende update te genereren. Als de browser window actief is, zal dit 60 keer per seconden updaten, dit is een prima animatie met 60FPS.
 
+# Hoofdstuk 15 Handling events
+
+## Event handlers
+
+Door handlers te gebruiken kan je events opmerken om vervolgens een functie uit te voeren:
+```
+<p>Click this document to activate the handler.</p>
+<script>
+  window.addEventListener("click", () => {
+    console.log("You knocked?");
+  });
+</script>
+```
+
+Hier wordt een eventlistener toegevoegs aan de window.
+
+## Events and dom nodes
+
+De *removeEventlistener* method met called met argumenten kan je de handler weghalen:
+
+```
+<button>Act-once button</button>
+<script>
+  let button = document.querySelector("button");
+  function once() {
+    console.log("Done.");
+    button.removeEventListener("click", once);
+  }
+  button.addEventListener("click", once);
+</script>
+```
+Je moet dezelfde function meegeven bij beide eventlisteners.
+
+## Event objects
+
+Je kan ook checken bij de muis welke knop hier is ingedrukt, hier zijn bepaalde codes voor en kan je checken met een *if* statement:
+
+```
+<button>Click me any way you want</button>
+<script>
+  let button = document.querySelector("button");
+  button.addEventListener("mousedown", event => {
+    if (event.button == 0) {
+      console.log("Left button");
+    } else if (event.button == 1) {
+      console.log("Middle button");
+    } else if (event.button == 2) {
+      console.log("Right button");
+    }
+  });
+</script>
+```
+
+## Propagation
+
+Door de *stopPropagation* method te callen kan je voorkomen dat andere handlers het event ontvangen. Bijvoorbeeld als je een knop in een clickable element heb, en je wil niet dat de knop dingen kan registreren maar alleen hetegene om de knop heen. Hier een voorbeeld:
+
+```
+<p>A paragraph with a <button>button</button>.</p>
+<script>
+  let para = document.querySelector("p");
+  let button = document.querySelector("button");
+  para.addEventListener("mousedown", () => {
+    console.log("Handler for paragraph.");
+  });
+  button.addEventListener("mousedown", event => {
+    console.log("Handler for button.");
+    if (event.button == 2) event.stopPropagation();
+  });
+</script>
+```
+
+## Default actions
+
+* Link: Je wordt naar een target gebracht van de link.
+* Down arrow: De browser scrolled naar beneden.
+* Right click: Context menu.
+
+Door de *preventDefault* method te gebruiken op een event object kan je het normale actions negeren.
+
+Bijvoorbeeld als je je eigen keyboard shortcuts will hebben in een menu, dan wil je niet dat je pagina naar beneden scrolled.
+
+Hier is een voorbeeld van een link die niet gevolgt wordt:
+
+```
+<a href="https://developer.mozilla.org/">MDN</a>
+<script>
+  let link = document.querySelector("a");
+  link.addEventListener("click", event => {
+    console.log("Nope.");
+    event.preventDefault();
+  });
+</script>
+```
+Gebruik dit alleen als je een hele goede reden heb om dit te doen. Mensen die deze normale acties gewend zijn zullen dit niet leuk vinden als er unexpected behaviour is.
+
+## Key events
+
+Als je een key indrukt zal er een *keydown* event zijn, en een *keyup* event als je deze weer los laat:
+
+```
+<p>This page turns violet when you hold the V key.</p>
+<script>
+  window.addEventListener("keydown", event => {
+    if (event.key == "v") {
+      document.body.style.background = "violet";
+    }
+  });
+  window.addEventListener("keyup", event => {
+    if (event.key == "v") {
+      document.body.style.background = "";
+    }
+  });
+</script>
+```
+
+## Pointer events
+
+Je heb een muis / touchpad en touchscreens. Dit zijn verschillende soorten events
+
+### Mouse clicks
+
+Als je een muis indrukt zullen er nummers ontstaan. *mouseup* en *mousedown* zijn hetzelfde als *keyup* en *keydown*.
+
+### Mouse motion
+
+Elke keer dat de muis beweegt wordt er een *mousemove* event gelanceerd. Dit wordt gebruikt om de plek van de muis positie te bepalen. 
+
+Dit kan je gebruiken om de lengte van een balk te veranderen:
+
+```
+<p>Drag the bar to change its width:</p>
+<div style="background: orange; width: 60px; height: 20px">
+</div>
+<script>
+  let lastX; // Tracks the last observed mouse X position
+  let bar = document.querySelector("div");
+  bar.addEventListener("mousedown", event => {
+    if (event.button == 0) {
+      lastX = event.clientX;
+      window.addEventListener("mousemove", moved);
+      event.preventDefault(); // Prevent selection
+    }
+  });
+
+  function moved(event) {
+    if (event.buttons == 0) {
+      window.removeEventListener("mousemove", moved);
+    } else {
+      let dist = event.clientX - lastX;
+      let newWidth = Math.max(10, bar.offsetWidth + dist);
+      bar.style.width = newWidth + "px";
+      lastX = event.clientX;
+    }
+  }
+</script>
+```
+Hier wordt de *mouseover* handler over de gehele window geregistreerd. Dus als je de balk ingedrukt houdt terwijl je muis buiten de box is, zal de lengte als nog updaten.
+
+### Touch events
+
+Een touchscreen werkt anders dan een muis. Er zijn geen buttons, en je kan niet de vinger tracken als deze niet op het scherm is. Daarnaast kan je meerdere vingers tegelijkertijd hebben.
+
+Er zijn specifieke events zoals *touchstart* *touchmove* en *touchend* hiervoor.
+
+## Scroll events
+
+Je kan scroll events gebruiken door een bepaalde waarde mee te geven:
+
+```
+<style>
+  #progress {
+    border-bottom: 2px solid blue;
+    width: 0;
+    position: fixed;
+    top: 0; left: 0;
+  }
+</style>
+<div id="progress"></div>
+<script>
+  // Create some content
+  document.body.appendChild(document.createTextNode(
+    "supercalifragilisticexpialidocious ".repeat(1000)));
+
+  let bar = document.querySelector("#progress");
+  window.addEventListener("scroll", () => {
+    let max = document.body.scrollHeight - innerHeight;
+    bar.style.width = `${(pageYOffset / max) * 100}%`;
+  });
+</script>
+```
+
+Als je een element een *position fixed* geeft dan zorgt het ervoor dat je voorkomt dat je scrolled met de rest van het document. 
+
+De *innerHeight* geeft je de height van de window. Dit kan je gebruiken om te bepalen hoe hoog je in de window zit. 
+
+## Focus events
+
+Als een element in focus is zal de browser dit een *focus* event meegeven. Als de focus weggaat krijgt hij een *blur* event.
+
+Dit voorbeeld help je om te zien wat de focus heeft:
+
+```
+<p>Name: <input type="text" data-help="Your full name"></p>
+<p>Age: <input type="text" data-help="Your age in years"></p>
+<p id="help"></p>
+
+<script>
+  let help = document.querySelector("#help");
+  let fields = document.querySelectorAll("input");
+  for (let field of Array.from(fields)) {
+    field.addEventListener("focus", event => {
+      let text = event.target.getAttribute("data-help");
+      help.textContent = text;
+    });
+    field.addEventListener("blur", event => {
+      help.textContent = "";
+    });
+  }
+</script>
+```
+
+## Load event
+
+Als een pagina klaar is met laden, zal er een event *load* afgevuurd worden op de window en de document body objects. Dit wordt vaak gebruikt om het hele document te bouwen.
+
+Als een pagina wordt geclosed of weg wordt genavigeert door bijvoorbeeld een link, dan wordt er een *beforeunload* event afgevuurd. Dit wordt gebruikt als de gebruiker perongeluk al zijn werk kwijtraakt als hij dit niet heeft opgeslagen.
+
+## Events and the event loop
+
+Als je iets wil doen dat time consuming is zonder de page te laten freezen, dan zijn er *web workers*. Een worker is een Javascript process die naast de main script wordt gelezen op zijn eigen tijdlijn.
+
+## Timers
+
+Soms moet je een function cancelen, dit doe je door de value te storen die je terug krijgt van *setTimeout* en dan *clearTimeout* te callen:
+
+```
+let bombTimer = setTimeout(() => {
+  console.log("BOOM!");
+}, 500);
+
+if (Math.random() < 0.5) { // 50% chance
+  console.log("Defused.");
+  clearTimeout(bombTimer);
+}
+```
+
+## Debouncing
+
+Als er veel interacties tegelijk zijn kan je het beste *setTimeout* gebruiken zodat dit niet te vaak gebeurd. Dit noem je *debouncing* the event. 
+
+```
+<textarea>Type something here...</textarea>
+<script>
+  let textarea = document.querySelector("textarea");
+  let timeout;
+  textarea.addEventListener("input", () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => console.log("Typed!"), 500);
+  });
+</script>
+```
+
+## Summary
+
+Event handlers make it possible to detect and react to events happening in our web page. The addEventListener method is used to register such a handler.
+
+Each event has a type ("keydown", "focus", and so on) that identifies it. Most events are called on a specific DOM element and then propagate to that element’s ancestors, allowing handlers associated with those elements to handle them.
+
+When an event handler is called, it is passed an event object with additional information about the event. This object also has methods that allow us to stop further propagation (stopPropagation) and prevent the browser’s default handling of the event (preventDefault).
+
+Pressing a key fires "keydown" and "keyup" events. Pressing a mouse button fires "mousedown", "mouseup", and "click" events. Moving the mouse fires "mousemove" events. Touchscreen interaction will result in "touchstart", "touchmove", and "touchend" events.
+
+Scrolling can be detected with the "scroll" event, and focus changes can be detected with the "focus" and "blur" events. When the document finishes loading, a "load" event fires on the window.
+
+
 
 
 
